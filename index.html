@@ -1,0 +1,17 @@
+---
+layout: default
+title: knuxify's blog
+---
+<h2>latest posts</h2>
+{% for post in site.posts %}
+	<div class="post index">
+		<p class="metadata">{{ post.date | date_to_string }} // {{ post.author }}</p>
+		<h3 class="title"><a href="{{ site.baseurl}}{{ post.url }}">{{ post.title }}</a></h3>
+		{% if post.description %}
+			<p class="description">{{ post.description }}</p>
+		{% endif %}
+		<hr>
+		{{ post.excerpt }}
+		<a class="read-more" href="{{ site.baseurl}}{{ post.url }}">read more...</a>
+	</div>
+{% endfor %}

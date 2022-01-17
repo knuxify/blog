@@ -1,0 +1,17 @@
+title: knuxify's blog
+email: knuxify@gmail.com
+baseurl: "/~undefined"
+url: "https://dithernet.org"
+twitter_username: knuxify
+github_username:  knuxify
+
+license: CC BY-SA 4.0
+footer: <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png"></a>
+
+permalink: /:year/:month/:title:output_ext
+excerpt_separator: <!--more-->
+kramdown:
+  syntax_highlighter: rouge
+
+plugins:
+  - jekyll-seo-tag

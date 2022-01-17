@@ -1,0 +1,8 @@
+<div id="header">
+	<ul id="navbar">
+	  {% for item in site.data.navigation %}
+	    <li><a href="{{ item.link }}" {% if page.url == item.link %}class="selected"{% endif %}>{{ item.name |lowercase }}</a></li>
+	  {% endfor %}
+	</ul>
+	<h1><a href="{{ site.baseurl }}/">{{ site.title }}</a></h1>
+</div>

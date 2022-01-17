@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	{% seo title=false %}
+    <title>{{ page.title }} | {{ site.title }}</title>
+	<link rel="stylesheet" href="{{ site.baseurl }}/assets/style.css">
+	<link rel="stylesheet" href="{{ site.baseurl }}/assets/syntax.css">
+  </head>
+  <body>
+	<div id="container">
+		{% include header.html %}
+		<div id="content">
+			{{ content }}
+		</div>
+		<div id="footer">
+			{{ site.title }} | license: {{ site.license }}<br>
+			{{ site.footer }}
+		</div>
+	</div>
+  </body>
+</html>
