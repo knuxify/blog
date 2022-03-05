@@ -116,6 +116,26 @@ h6::before { color: #64686c; font-family: monospace; font-size: 0.8em; content: 
 	margin-top: 0.25em;
 }
 
+.post .content blockquote {
+	border-left: 4px solid #455564;
+	background-color: rgba(32, 34, 34, 0.5);
+	padding: 1px 1em;
+	margin-left: 1em;
+	margin-right: 0;
+}
+
+.post .content code {
+	background-color: #181c1c;
+	border-radius: 4px;
+	padding: 3px;
+}
+
+.highlight code {
+	background: transparent;
+	border-radius: 0 !important;
+	padding: 0 !important;
+}
+
 /* Comments */
 .comments { width: 100%; }
 
