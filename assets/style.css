@@ -125,7 +125,7 @@ h6::before { color: #64686c; font-family: monospace; font-size: 0.8em; content: 
 }
 
 .post .content code {
-	background-color: #181c1c;
+	background-color: #202222;
 	border-radius: 4px;
 	padding: 3px;
 }
