@@ -214,7 +214,7 @@ class MyWidget(Gtk.Box):
 
 This is the actual class definition - the widget is a simple Python object. It's worth noting that **the inherited object must match the parent object**, as set in the template file.
 
-``__gtype_name__` **must be set to the widget's class name**, as seen in the template. The actual Python class name doesn't have to match this - so, for example, you could do this:
+`__gtype_name__` **must be set to the widget's class name**, as seen in the template. The actual Python class name doesn't have to match this - so, for example, you could do this:
 
 ```python
 class CoolWidget(Gtk.Box):
@@ -222,7 +222,7 @@ class CoolWidget(Gtk.Box):
     __gtype_name__ = 'MyWidget'
 ```
 
-...and, as long as the `_gtype_name__` matches the class name set in the `<template>` tag, this will refer to `MyWidget`.
+...and, as long as the `__gtype_name__` matches the class name set in the `<template>` tag, this will refer to `MyWidget`.
 
 ## Accessing children
 
