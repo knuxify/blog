@@ -97,15 +97,15 @@ div.highlight {
 }
 
 h2, h3, h4, h5, h6 {
-	color: #808488;
+	color: #8598a4;
 	margin: 0.5em 0;
 }
 
-h2::before { color: #64686c; font-family: monospace; font-size: 0.8em; content: "## "; }
-h3:not(.title):before { color: #64686c; font-family: monospace; font-size: 0.8em; content: "### "; }
-h4::before { color: #64686c; font-family: monospace; font-size: 0.8em; content: "#### "; }
-h5::before { color: #64686c; font-family: monospace; font-size: 0.8em; content: "##### "; }
-h6::before { color: #64686c; font-family: monospace; font-size: 0.8em; content: "###### "; }
+h2::before { color: #4e626f; font-family: monospace; font-size: 0.8em; content: "## "; }
+h3:not(.title):before { color: #4e626f; font-family: monospace; font-size: 0.8em; content: "### "; }
+h4::before { color: #4e626f; font-family: monospace; font-size: 0.8em; content: "#### "; }
+h5::before { color: #4e626f; font-family: monospace; font-size: 0.8em; content: "##### "; }
+h6::before { color: #4e626f; font-family: monospace; font-size: 0.8em; content: "###### "; }
 
 .post .content img, .post .content figure {
 	text-align: center; max-width: 75%; display: block; margin: 0 auto;
