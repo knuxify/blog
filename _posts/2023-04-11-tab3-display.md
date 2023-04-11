@@ -128,7 +128,7 @@ I went through quite a lot of debugging to figure this part out. Here are some o
 * At some point while digging through the kernel for clues, I found `arch/arm/plat-samsung/dev-backlight.c`, which seemed to contain the PWM period value I was looking for - `78770`.
 * I copied the period and set up PWM just like the mainline `lp855x` driver docs told me to... but I still got nothing. Turns out, the driver was broken, and PWM mode didn't work at all!
 
-I figured out that I could export out the PWM pin using `echo "1" > /sys/class/pwm/export`, then set the duty cycle and period values manually following the lp855x driver code that *should* have worked. And indeed, I saw the voltage rise from 14.25V to about 16V. Not yet enough, but we were getting close!
+I figured out that I could export out the PWM pin using `echo "1" > /sys/class/pwm/pwmchip0/export`, then set the duty cycle and period values manually following the lp855x driver code that *should* have worked. And indeed, I saw the voltage rise from 14.25V to about 16V. Not yet enough, but we were getting close!
 
 Since I now knew that PWM controlled the backlight, and we didn't need the `lp855x` driver for it, I decided to use the generic `pwm-backlight` driver instead. I copied the pwm-backlight node using the generic pwm-backlight driver from another Exynos device, the Galaxy Note 10.1 (p4note):
 
