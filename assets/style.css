@@ -130,6 +130,19 @@ h2, h3, h4, h5, h6 {
 	padding: 0 !important;
 }
 
+.post .featured-image {
+	width: 100%;
+	height: 20vh;
+	object-fit: cover;
+	margin-bottom: 0.5rem;
+}
+
+.post.index .featured-image { height: 175px; }
+
+.post img {
+	border-radius: 6px;
+}
+
 /* Comments */
 .comments { width: 100%; }
 

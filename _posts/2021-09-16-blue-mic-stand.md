@@ -2,6 +2,7 @@
 layout: post
 author: knuxify
 title: "Fixing the Blue Snowball microphone stand, with the power of 3D printing"
+image: /images/blue-mic-stand/micstand1.jpg
 tags:
   - 3d printing
   - 3d

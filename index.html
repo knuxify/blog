@@ -4,13 +4,16 @@ title: knuxify's blog
 ---
 {% for post in site.posts %}
 	<div class="post index">
-		<h1 class="title"><a href="{{ site.baseurl}}{{ post.url }}">{{ post.title }}</a></h3>
+		{%- if post.image -%}
+			<a href="{{ site.baseurl}}{{ post.url }}"><img src="{{- post.image | relative_url -}}" alt="" class="featured-image"></a>
+		{%- endif %}
+		<h1 class="title"><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h3>
 		{% if post.description %}
 			<p class="description">{{ post.description }}</p>
 		{% endif %}
 		<p class="metadata">{{ post.date | date_to_string }} // {{ post.author }}</p>
 		{{ post.excerpt }}
-		<a class="read-more" href="{{ site.baseurl}}{{ post.url }}">Read more...</a>
+		<a class="read-more" href="{{ site.baseurl }}{{ post.url }}">Read more...</a>
 	</div>
 	<hr>
 {% endfor %}
