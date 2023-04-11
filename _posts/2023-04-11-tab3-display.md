@@ -471,7 +471,7 @@ In my case, it looked fine without the last two, but it would desync after the s
 
 What I did was I first tried to copy the flags from similar panels in mainline - that's how I ended up with the mode flags that eventually worked. As for the bus flags - I just had to experiment. `DRM_BUS_FLAG_DE_HIGH` was the magic flag that made everything work, but your mileage may vary - every panel is different.
 
-Finally, after nearly 2 weeks of trying, I had a working display!
+Finally, after nearly 3 weeks of trying, I had a working display!
 
 <!--![Picture of the tablet booting postmarketOS](/blog/images/tab3-display/tablet.jpg)-->
 {% include image url="/blog/images/tab3-display/tablet.jpg" description="Picture of the tablet booting postmarketOS." %}
