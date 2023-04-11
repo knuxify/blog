@@ -1,6 +1,4 @@
-- name: about
-  link: /~undefined/about.html
 - name: feed
-  link: /~undefined/feed.xml
+  link: /blog/feed.xml
 - name: website
   link: https://tilde.town/~knuxify
