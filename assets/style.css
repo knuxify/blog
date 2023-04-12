@@ -70,6 +70,9 @@ h1 { color: var(--title-color); }
 
 a, a:hover, a:visited, a:active, a:link { color: var(--link-color); }
 
+a { transition: filter 0.2s ease-out; filter: brightness(1); }
+a:hover { filter: brightness(1.1); }
+
 .post {
 	line-height: 1.6;
 	margin: 20px 0;
@@ -160,4 +163,4 @@ h2, h3, h4, h5, h6 {
 .comments { width: 100%; }
 
 /* Footer */
-#footer { text-align: right; padding: 20px 0; color: #9b9b9b; }
+#footer { text-align: right; padding: 20px 0; color: var(--main-fg); opacity: 0.5; }
