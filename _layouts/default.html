@@ -4,9 +4,11 @@
     <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	{% seo title=false %}
-    <title>{{ page.title }} | {{ site.title }}</title>
+    <title>{{ page.title }}{% if page.title != site.title %} | {{ site.title }}{% endif %}</title>
 	<link rel="stylesheet" href="{{ site.baseurl }}/assets/style.css">
 	<link rel="stylesheet" href="{{ site.baseurl }}/assets/syntax.css">
+	<link rel="preconnect" href="https://fonts.bunny.net">
+<link href="https://fonts.bunny.net/css?family=noto-sans:400,400i,700,700i" rel="stylesheet" />
   </head>
   <body>
 	<div id="container">
