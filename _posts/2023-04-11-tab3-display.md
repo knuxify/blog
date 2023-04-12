@@ -4,7 +4,12 @@ author: knuxify
 title: (Mis)adventures in getting a working display on mainline Linux
 description: or, how I spent nearly 3 weeks trying to figure out why I wasn't getting an image on my Galaxy Tab 3 8.0.
 image: /images/tab3-display/tablet.jpg
-tags: linux mainline exynos mipi display
+tags:
+  - linux
+  - mainline
+  - exynos
+  - mipi
+  - display
 excerpt_separator: <!--more-->
 ---
 
