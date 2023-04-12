@@ -23,6 +23,9 @@ body {
 }
 
 hr { color: var(--separator-color); }
+.underline { width: 100%; border-bottom: 2px var(--separator-color) solid; }
+
+h1 { color: var(--title-color); }
 
 #container {
 	padding: 1em 15px;
