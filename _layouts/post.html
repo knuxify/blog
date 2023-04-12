@@ -3,7 +3,7 @@ layout: default
 ---
 <div class="post page">
 	{%- if page.image -%}
-		<img src="{{- page.image | relative_url -}}" alt="" class="featured-image">
+		<img src="{{- page.image | relative_url -}}" alt="{{ page.title }}" aria-hidden="true" class="featured-image">
 	{%- endif %}
 	<h1 class="title">{{ page.title }}</h1>
 	{% if page.description %}
