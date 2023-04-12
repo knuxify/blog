@@ -6,7 +6,7 @@ title: knuxify's blog
 {% for post in site.posts %}
 	<div class="post index">
 		{%- if post.image -%}
-			<a href="{{ site.baseurl}}{{ post.url }}"><img src="{{- post.image | relative_url -}}" alt="" class="featured-image"></a>
+			<a href="{{ site.baseurl}}{{ post.url }}"><img src="{{- post.image | relative_url -}}" alt="" class="featured-image" loading="lazy"></a>
 		{%- endif %}
 		<h1 class="title"><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h3>
 		{% if post.description %}
