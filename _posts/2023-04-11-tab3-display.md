@@ -11,6 +11,7 @@ tags:
   - mipi
   - display
 excerpt_separator: <!--more-->
+last_modified_at: 2023-04-15T00:00:00+00:00
 ---
 
 A while back, I tried to mainline my [Samsung Galaxy Tab 3 8.0 (lt01)](https://wiki.postmarketos.org/wiki/Samsung_Galaxy_Tab_3_8.0_(SM-T310)_(samsung-lt01wifi)). It's a tablet from 2013 with the Exynos 4212 chipset - the dual-core variant of the already well-supported Exynos 4412. When support for the Exynos 4 mainline kernel was added to postmarketOS, I figured it was the perfect time to try and get it running on mainline.
@@ -129,13 +130,25 @@ See, to actually be able to enable PWM mode in the mainline driver, we needed tw
 
 I went through quite a lot of debugging to figure this part out. Here are some of the more interesting discoveries I made along the way:
 
-* In downstream, two backlight devices appeared under `/sys/class`. One was the `lp855x` device, but it seemed to do nothing... the other was an `mdnie` device, that actually changed the brightness...? Searching for the source was inconslusive, but I ended up finding `drivers/video/samsung/mdnie.c`, which is the driver for mDNIe - "Mobile Digital Natural Image Engine", a Samsung-proprietary color correction system.
+* In downstream, two backlight devices appeared under `/sys/class`. One was the `lp855x` device, but it seemed to do nothing... the other was an `mdnie` device, that actually changed the brightness...? It's controlled by the driver at `drivers/video/samsung/mdnie.c`, which is the driver for mDNIe - "Mobile Digital Natural Image Engine", a Samsung-proprietary color correction system.
 * At some point while digging through the kernel for clues, I found `arch/arm/plat-samsung/dev-backlight.c`, which seemed to contain the PWM period value I was looking for - `78770`.
-* I copied the period and set up PWM just like the mainline `lp855x` driver docs told me to... but I still got nothing. Turns out, the driver was broken, and PWM mode didn't work at all!
+* I copied the period and set up PWM just like the mainline `lp855x` driver docs told me to... but I still got nothing.
 
-I figured out that I could export out the PWM pin using `echo "1" > /sys/class/pwm/pwmchip0/export`, then set the duty cycle and period values manually following the lp855x driver code that *should* have worked. And indeed, I saw the voltage rise from 14.25V to about 16V. Not yet enough, but we were getting close!
+### The REAL cause of the backlight failures
 
-Since I now knew that PWM controlled the backlight, and we didn't need the `lp855x` driver for it, I decided to use the generic `pwm-backlight` driver instead. I copied the pwm-backlight node using the generic pwm-backlight driver from another Exynos device, the Galaxy Note 10.1 (p4note):
+**This part was added ahead of time, on April 15th 2023.** As it turns out, I had jumped to conclusions here way too fast, and missed some details.
+
+As it turns out - indeed, the downstream lp855x device isn't fully configured for PWM control - the folks adding the necessary setup structs did not set up the `pwm_set_intensity` element, which *should* be a pointer to a function that sets the duty cycle for the PWM to match the requested brightness. Let me explain.
+
+The PWM **period** is the total period of the PWM signal, and the **duty cycle** is the active time. The way you set the backlight's intensity is by adjusting the duty cycle value - the closer it is to 0, the dimmer the backlight gets, and the closer it is to the period (which acts as the "maximum" value), the brighter it gets.
+
+When trying to figure this out, I stumbled across two issues:
+
+Firstly, I didn't actually add the PWMs correctly! Turns out, I accidentally added a `pwm` property instead of the `pwms` property. In my defense, the driver doesn't even print an error message when this happens - it just silently fails. I didn't know this at the time - so I had just assumed that the driver was broken.
+
+I figured out that I could export out the PWM pin using `echo "1" > /sys/class/pwm/pwmchip0/export`, then set the duty cycle and period values manually following the lp855x driver code that *should* have worked. To be exact - I figured that I could just set the duty cycle to the period, effectively blasting the backlight at full brightness. And indeed, I saw the voltage rise from 14.25V to about 16V - not quite enough to get it to work!
+
+Since I now knew that PWM controlled the backlight, I decided to use the generic `pwm-backlight` driver instead. I copied the pwm-backlight node using the generic pwm-backlight driver from another Exynos device, the Galaxy Note 10.1 (p4note):
 
 ```c
 	backlight: backlight {
@@ -151,6 +164,54 @@ Since I now knew that PWM controlled the backlight, and we didn't need the `lp85
 ```
 
 And sure enough, it worked, and the backlight was now turning on!
+
+However, that wasn't the end of it. There was a second issue that even the pwm-backlight driver couldn't fix, and it was the reason for why my initial test with an exported PWM pin didn't work:
+
+For some reason, setting the brightness to the maximum value, and thus setting the duty cycle to 100%, caused the backlight to behave as if it was set to 0%. That's right - setting the maximum brightness would cause the backlight to turn off. Not exactly ideal.
+
+I set up the lp855x node, this time correctly, to see if maybe setting the configuration values there would fix it:
+
+```c
+	backlight: backlight@2c {
+		compatible = "ti,lp8556";
+		reg = <0x2c>;
+		status = "okay";
+
+		bl-name = "lcd-bl";
+		dev-ctrl = /bits/ 8 <0x80>;
+		init-brt = /bits/ 8 <0x78>; /* 120 */
+
+		power-supply = <&vbatt_reg>;
+		enable-supply = <&backlight_reset_supply>;
+
+		pwms = <&pwm 1 78770 0>;
+		pwm-names = "lp8556";
+		pwm-period = <78770>;
+
+		rom_a3h {
+			rom-addr = /bits/ 8 <0xa3>;
+			rom-val = /bits/ 8 <0x5e>;
+		};
+
+		rom_a5h {
+			rom-addr = /bits/ 8 <0xa5>;
+			rom-val = /bits/ 8 <0x34>;
+		};
+
+		rom_a7h {
+			rom-addr = /bits/ 8 <0xa7>;
+			rom-val = /bits/ 8 <0xfa>;
+		};
+	};
+```
+
+This one indeed worked, and as a bonus, I didn't have choppy switches between brightness settings anymore - the transition between brightness settings was now smoothed out automatically. It also fixed an issue where setting the brightness to 0 in Phosh completely shut down the display as well. But it did not fix the backlight shutting down at 100%.
+
+I went back to the `mdnie` driver in downstream, and confirmed that it was indeed doing something with the backlight. However, I could not find any mentions of the PWM interface anywhere - all it seemed to be doing was modifying its own registers. That's right, this is not a software-only driver, this thing has *hardware registers*! Now *that's* what I call proprietary.
+
+In any case - I haven't figured out the cause of this problem yet. I suspect it might be related to the `mdnie` driver, which isn't implemented in mainline at all. I ended up working around this by [modifying the driver](https://github.com/refractionware/tab3-8.0-mainline/commit/192fd3430555f083656c28594dae2d04b9e6392f) to simply never set the duty cycle to 100%, and while that works well enough, it's very much a hack and would require some proper investigation down the line.
+
+Other than that hurdle, we now had a working backlight!
 
 ## Figuring out the panel connection
 
