@@ -12,7 +12,7 @@ title: knuxify's blog
 		{% if post.description %}
 			<p class="description">{{ post.description }}</p>
 		{% endif %}
-		<p class="metadata">{{ post.date | date_to_string }} // {{ post.author }}</p>
+		<p class="metadata">{{ post.date | date_to_string }} {% if post.last_modified_at %}<i>(updated {{post.last_modified_at | date_to_string}})</i> {% endif %}// {{ post.author }}</p>
 		{{ post.excerpt }}
 		<a class="read-more" href="{{ site.baseurl }}{{ post.url }}">Read more...</a>
 	</div>

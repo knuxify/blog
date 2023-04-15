@@ -9,7 +9,7 @@ layout: default
 	{% if page.description %}
 		<p class="description">{{ page.description }}</p>
 	{% endif %}
-	<p class="metadata">{{ page.date | date_to_string }} // {{ page.author }}</p>
+	<p class="metadata">{{ page.date | date_to_string }} {% if page.last_modified_at %}<i>(updated {{page.last_modified_at | date_to_string}})</i> {% endif %}// {{ page.author }}</p>
 	<div class="content">{{ content }}</div>
 </div>
 <hr>
