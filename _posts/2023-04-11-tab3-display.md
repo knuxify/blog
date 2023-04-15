@@ -134,9 +134,9 @@ I went through quite a lot of debugging to figure this part out. Here are some o
 * At some point while digging through the kernel for clues, I found `arch/arm/plat-samsung/dev-backlight.c`, which seemed to contain the PWM period value I was looking for - `78770`.
 * I copied the period and set up PWM just like the mainline `lp855x` driver docs told me to... but I still got nothing.
 
-### The REAL cause of the backlight failures
+### Figuring out the backlight failures
 
-**This part was added ahead of time, on April 15th 2023.** As it turns out, I had jumped to conclusions here way too fast, and missed some details.
+**This part was added later, on April 15th 2023.** As it turns out, I had jumped to conclusions here way too fast, and missed some details.
 
 As it turns out - indeed, the downstream lp855x device isn't fully configured for PWM control - the folks adding the necessary setup structs did not set up the `pwm_set_intensity` element, which *should* be a pointer to a function that sets the duty cycle for the PWM to match the requested brightness. Let me explain.
 
@@ -146,7 +146,7 @@ When trying to figure this out, I stumbled across two issues:
 
 Firstly, I didn't actually add the PWMs correctly! Turns out, I accidentally added a `pwm` property instead of the `pwms` property. In my defense, the driver doesn't even print an error message when this happens - it just silently fails. I didn't know this at the time - so I had just assumed that the driver was broken.
 
-I figured out that I could export out the PWM pin using `echo "1" > /sys/class/pwm/pwmchip0/export`, then set the duty cycle and period values manually following the lp855x driver code that *should* have worked. To be exact - I figured that I could just set the duty cycle to the period, effectively blasting the backlight at full brightness. And indeed, I saw the voltage rise from 14.25V to about 16V - not quite enough to get it to work!
+I figured out that I could export out the PWM pin using `echo "1" > /sys/class/pwm/pwmchip0/export`, then set the duty cycle and period values manually following the lp855x driver code that *should* have worked. To be exact - I figured that I could just set the duty cycle to the period, effectively blasting the backlight at full brightness. And indeed, I saw the voltage rise from 14.25V to about 16V - that's better, but not quite enough to get it to work just yet!
 
 Since I now knew that PWM controlled the backlight, I decided to use the generic `pwm-backlight` driver instead. I copied the pwm-backlight node using the generic pwm-backlight driver from another Exynos device, the Galaxy Note 10.1 (p4note):
 
@@ -163,7 +163,7 @@ Since I now knew that PWM controlled the backlight, I decided to use the generic
 	};
 ```
 
-And sure enough, it worked, and the backlight was now turning on!
+For the time being, it worked, and the backlight was now turning on!
 
 However, that wasn't the end of it. There was a second issue that even the pwm-backlight driver couldn't fix, and it was the reason for why my initial test with an exported PWM pin didn't work:
 
