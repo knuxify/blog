@@ -537,7 +537,7 @@ In my case, it looked fine without the last one, but it would desync after the s
 
 What I did was I first tried to copy the flags from similar panels in mainline - that's how I ended up with the mode flags that eventually worked. As for the bus flags - I just had to experiment. `DRM_BUS_FLAG_DE_HIGH` was the magic flag that made everything work, but your mileage may vary - every panel is different.
 
-(Small aside on the topic: DRM mode flags are actually implemented by the DRM driver. In the case of the Exynos DRM DSI driver, found out by grepping around in the source that the DRM flags are simply [written to the DSIM_CONFIG register](https://github.com/torvalds/linux/blob/v6.3-rc7/drivers/gpu/drm/exynos/exynos_drm_dsi.c#L800-L866) (offset `0x10`); from there, I was able to figure out that I could just extract the correct DRM flags for the panel by checking the DSIM dump (as mentioned in the DSI/FIMD section). Here's a small Python snippet that can extract these flags from the dumped config value:
+(Small aside on the topic: DRM mode flags are actually implemented by the DRM driver. In the case of the Exynos DRM DSI driver, I found out by grepping around in the source that the DRM flags are simply [written to the DSIM_CONFIG register](https://github.com/torvalds/linux/blob/v6.3-rc7/drivers/gpu/drm/exynos/exynos_drm_dsi.c#L800-L866) (offset `0x10`); from there, I was able to figure out that I could just extract the correct DRM flags for the panel by checking the DSIM dump (as mentioned in the DSI/FIMD section). Here's a small Python snippet that can extract these flags from the dumped config value:
 
 ```python
 dsim_cfg=0x0640707F # replace with your value
