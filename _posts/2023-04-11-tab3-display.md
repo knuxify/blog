@@ -11,7 +11,7 @@ tags:
   - mipi
   - display
 excerpt_separator: <!--more-->
-last_modified_at: 2023-04-15T00:00:00+00:00
+last_modified_at: 2023-04-22T00:00:00+00:00
 ---
 
 A while back, I tried to mainline my [Samsung Galaxy Tab 3 8.0 (lt01)](https://wiki.postmarketos.org/wiki/Samsung_Galaxy_Tab_3_8.0_(SM-T310)_(samsung-lt01wifi)). It's a tablet from 2013 with the Exynos 4212 chipset - the dual-core variant of the already well-supported Exynos 4412. When support for the Exynos 4 mainline kernel was added to postmarketOS, I figured it was the perfect time to try and get it running on mainline.
@@ -138,7 +138,7 @@ I went through quite a lot of debugging to figure this part out. Here are some o
 
 **This part was added later, on April 15th 2023.** As it turns out, I had jumped to conclusions here way too fast, and missed some details.
 
-As it turns out - indeed, the downstream lp855x device isn't fully configured for PWM control - the folks adding the necessary setup structs did not set up the `pwm_set_intensity` element, which *should* be a pointer to a function that sets the duty cycle for the PWM to match the requested brightness. Let me explain.
+Indeed, the downstream lp855x device isn't fully configured for PWM control - the folks adding the necessary setup structs did not set up the `pwm_set_intensity` element, which *should* be a pointer to a function that sets the duty cycle for the PWM to match the requested brightness. Let me explain.
 
 The PWM **period** is the total period of the PWM signal, and the **duty cycle** is the active time. The way you set the backlight's intensity is by adjusting the duty cycle value - the closer it is to 0, the dimmer the backlight gets, and the closer it is to the period (which acts as the "maximum" value), the brighter it gets.
 
@@ -526,16 +526,27 @@ static int s6d7aa0_probe(struct mipi_dsi_device *dsi)
 
 	// Mode flags go here:
 	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST
-		| MIPI_DSI_MODE_VSYNC_FLUSH | MIPI_DSI_MODE_VIDEO_AUTO_VERT;
+		| MIPI_DSI_MODE_VSYNC_FLUSH;
 	// [...]
 }
 ```
 
 You can find a list of DSI mode flags in [`include/drm/drm_mipi_dsi.h`](https://elixir.bootlin.com/linux/v6.2/source/include/drm/drm_mipi_dsi.h#L114).
 
-In my case, it looked fine without the last two, but it would desync after the screen was rotated. When you get your display working, make sure to test things like rotation!
+In my case, it looked fine without the last one, but it would desync after the screen was rotated. When you get your display working, make sure to test things like rotation!
 
 What I did was I first tried to copy the flags from similar panels in mainline - that's how I ended up with the mode flags that eventually worked. As for the bus flags - I just had to experiment. `DRM_BUS_FLAG_DE_HIGH` was the magic flag that made everything work, but your mileage may vary - every panel is different.
+
+(Small aside on the topic: DRM mode flags are actually implemented by the DRM driver. In the case of the Exynos DRM DSI driver, found out by grepping around in the source that the DRM flags are simply [written to the DSIM_CONFIG register](https://github.com/torvalds/linux/blob/v6.3-rc7/drivers/gpu/drm/exynos/exynos_drm_dsi.c#L800-L866) (offset `0x10`); from there, I was able to figure out that I could just extract the correct DRM flags for the panel by checking the DSIM dump (as mentioned in the DSI/FIMD section). Here's a small Python snippet that can extract these flags from the dumped config value:
+
+```python
+dsim_cfg=0x0640707F # replace with your value
+dsim_cfg_bits=[('DSIM_HSA_DISABLE_MODE', 20), ('DSIM_HBP_DISABLE_MODE', 21), ('DSIM_HFP_DISABLE_MODE', 22), ('DSIM_HSE_DISABLE_MODE', 23), ('DSIM_AUTO_MODE', 24), ('DSIM_VIDEO_MODE', 25), ('DSIM_BURST_MODE', 26), ('DSIM_SYNC_INFORM', 27), ('DSIM_EOT_DISABLE', 28), ('DSIM_MFLUSH_VS', 29)]
+for name, bit in dsim_cfg_bits:
+    print(name, bool(dsim_cfg & (1<<bit)))
+```
+
+See the linked driver for a reference of what these bits mean and how to turn them into mode flags.)
 
 Finally, after nearly 3 weeks of trying, I had a working display!
 
@@ -545,6 +556,11 @@ Finally, after nearly 3 weeks of trying, I had a working display!
 ## In closing
 
 I hope that this blog post will come in handy for anyone else who may at some point struggle with getting a display working on their own. While some parts are Exynos-specific (like the FIMD and DSI bits), others are useful to everyone - and even if you can't apply my advice one-to-one, just looking at the debugging process and reading some of the explainations might contribute to a working solution.
+
+### Updates
+
+- 2023-04-15: Added some information to the backlight section.
+- 2023-04-22: Added more information about DSI mode flags.
 
 [^1]: While working on the mainline setup, I initially thought that it used a BP070WX1 panel, as mentioned [in the defconfig](https://github.com/gr8nole/android_kernel_samsung_smdk4x12/blob/baf2ac725ded606f3beea775acbb472a3643887c/arch/arm/configs/lineage_lt01wifi_defconfig#L2350); however, it looks like someone [accidentally swapped the panel config option while updating the defconfig](https://github.com/gr8nole/android_kernel_samsung_smdk4x12/commit/25a3e0dc730c39a7b71daedf6975c573a3702c30#diff-461bf7e8fa9baa4343af1294a4c774ab287a0a057d4b28d79775c11a3a83d6fdL2377-R2379), and the [Kconfig descriptions](https://github.com/gr8nole/android_kernel_samsung_smdk4x12/blob/baf2ac725ded606f3beea775acbb472a3643887c/drivers/video/samsung/Kconfig#L397-L405) confirm this.
 [^2]: The code snippet here is slightly different than the panel driver I ended up with; the snippet is adapted to [this commit](https://github.com/torvalds/linux/commit/996e1defca34485dd2bd70b173f069aab5f21a65) which wasn't yet in the kernel I was testing on (v6.2). 
