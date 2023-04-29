@@ -487,7 +487,7 @@ But even though I got all the settings seemingly right, figured out the timings,
 
 I've mentioned a bit earlier that panels work by sending a low/high signal. But we still don't know whether the data is sent when the signal is high or low! And what about the sync pulse? That can be high or low too.
 
-The kernel has a mechanism for specifying this, and a few other quirks (such as handling vsync refreshes, etc.) - connector **bus flags** and the DSI **mode flags**.
+The kernel has a mechanism for specifying this, and a few other quirks - connector **bus flags** and the DSI **mode flags**.
 
 Bus flags are stored in the connector's display info struct, usually initialized in the `get_modes` function:
 
