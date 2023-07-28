@@ -12,6 +12,7 @@ tags:
   - display
 excerpt_separator: <!--more-->
 last_modified_at: 2023-04-22T00:00:00+00:00
+category: projects
 ---
 
 A while back, I tried to mainline my [Samsung Galaxy Tab 3 8.0 (lt01)](https://wiki.postmarketos.org/wiki/Samsung_Galaxy_Tab_3_8.0_(SM-T310)_(samsung-lt01wifi)). It's a tablet from 2013 with the Exynos 4212 chipset - the dual-core variant of the already well-supported Exynos 4412. When support for the Exynos 4 mainline kernel was added to postmarketOS, I figured it was the perfect time to try and get it running on mainline.

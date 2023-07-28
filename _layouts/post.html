@@ -9,8 +9,16 @@ layout: default
 	{% if page.description %}
 		<p class="description">{{ page.description }}</p>
 	{% endif %}
-	<p class="metadata">{{ page.date | date_to_string }} {% if page.last_modified_at %}<i>(updated {{page.last_modified_at | date_to_string}})</i> {% endif %}// {{ page.author }}</p>
+	<p class="metadata">{{ page.date | date_to_string }} {% if page.last_modified_at %}<i>(updated {{page.last_modified_at | date_to_string}})</i> {% endif %} | {{ page.author }}</p>
 	<div class="content">{{ content }}</div>
+	{%- if page.categories -%}
+		<hr><b>Categories:</b>
+		<div class="categories">
+	{% for category in page.categories %}
+		<a class="pill-button" href="{{site.url}}{{site.baseurl}}/category/{{category|downcase|slugize}}">{{category|downcase}}</a>
+	{% endfor %}
+		</div>
+	{%- endif %}
 </div>
 <hr>
 <div class="comments">

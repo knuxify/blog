@@ -44,9 +44,7 @@ h1 { color: var(--title-color); }
 #header {
 	width: 100%;
 	margin: 0;
-	border-left: var(--highlight-bg) 3px solid;
-	border-right: var(--highlight-bg) 3px solid;
-	padding: 0 10px;
+	padding: 0;
 	opacity: 0.85;
 }
 
@@ -72,6 +70,25 @@ a, a:hover, a:visited, a:active, a:link { color: var(--link-color); }
 
 a { transition: filter 0.2s ease-out; filter: brightness(1); }
 a:hover { filter: brightness(1.1); }
+
+.post .categories {
+	margin-bottom: 0.5em;
+}
+
+.post.page .categories {
+	margin-bottom: 0;
+	margin-top: 0.5em;
+}
+
+a.pill-button {
+	font-size: 0.85em;
+	display: inline-block;
+	background-color: var(--accent-color);
+	opacity: 0.75;
+	padding: 2px 0.75em;
+	border-radius: 12px;
+	text-decoration: none;
+}
 
 .post {
 	line-height: 1.6;
@@ -161,6 +178,15 @@ h2, h3, h4, h5, h6 {
 
 /* Comments */
 .comments { width: 100%; }
+
+/* Misc. elements */
+.highlight-box {
+	border-bottom: 2px solid var(--accent-color);
+	background-color: var(--highlight-bg);
+	padding: 1em;
+	margin-right: 0;
+	border-radius: 6px;
+}
 
 /* Footer */
 #footer { text-align: right; padding: 20px 0; color: var(--main-fg); opacity: 0.5; }

@@ -1,9 +1,10 @@
 ---
 layout: default
-title: knuxify's blog
 ---
-<h1 class="underline">Latest posts</h1>
-{% for post in site.posts %}
+
+<h2 class="underline"><span style="opacity: 0.85;">Category:</span> {{page.category|capitalize}}</h1>
+<div class="highlight-box">{{ page.description }}</div>
+{% for post in site.categories[page.category] %}
 	<div class="post index">
 		{%- if post.image -%}
 			<a href="{{ site.baseurl}}{{ post.url }}"><img src="{{- post.image | relative_url -}}" alt="{{ post.title }}" aria-hidden="true" class="featured-image" loading="lazy"></a>
@@ -12,14 +13,7 @@ title: knuxify's blog
 		{% if post.description %}
 			<p class="description">{{ post.description }}</p>
 		{% endif %}
-		{%- if post.categories -%}
-			<div class="categories">
-		{% for category in post.categories %}
-			<a class="pill-button" href="{{site.url}}{{site.baseurl}}/category/{{category|downcase|slugize}}">{{category|downcase}}</a>
-		{% endfor %}
-			</div>
-		{%- endif %}
-		<p class="metadata">{{ post.date | date_to_string }} {% if post.last_modified_at %}<i>(updated {{post.last_modified_at | date_to_string}})</i> {% endif %}| {{ post.author }}</p>
+		<p class="metadata">{{ post.date | date_to_string }} {% if post.last_modified_at %}<i>(updated {{post.last_modified_at | date_to_string}})</i> {% endif %}// {{ post.author }}</p>
 		{{ post.excerpt }}
 		<a class="read-more" href="{{ site.baseurl }}{{ post.url }}">Read more...</a>
 	</div>

@@ -4,6 +4,7 @@ author: knuxify
 title: How to take screenshots of partially/fully obscured windows in Xorg/X11
 tags: linux tips x11
 excerpt_separator: <!--more-->
+category: quickies
 ---
 
 *I initially posted this on my [Fediverse account](https://dither.ddns.net/notice/AA9v6W6uROGC5vub9E), and I'm now reposting it here for visibility. The all-lowercase text adds to the charm, so I'll keep it.*

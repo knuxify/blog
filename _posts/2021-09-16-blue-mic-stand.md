@@ -8,7 +8,7 @@ tags:
   - 3d
   - stl
   - fix blue snowball stand
-category: Projects
+category: projects
 ---
 
 I have a Blue Snowball microphone. As it usually is with any items that end up on my desk, I'll inevitably end up fidgeting with them in one way or another and breaking them as a result. And the same rule applied in this case - I broke the mic's stand fairly quickly. (Although, to be fair, it was fairly weak to begin with).
