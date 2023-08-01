@@ -155,13 +155,11 @@ h2, h3, h4, h5, h6 {
 
 .post .featured-image {
 	width: 100%;
-	height: 40vh;
+	height: 300px;
 	object-fit: cover;
 	margin-bottom: 0.5rem;
-	max-height: 350px;
 }
 
-.post.index .featured-image { height: 300px; }
 @media only screen and (max-width: 800px) {
 	.post.index .featured-image { height: 175px; }
 }
