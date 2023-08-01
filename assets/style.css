@@ -158,7 +158,7 @@ h2, h3, h4, h5, h6 {
 	height: 40vh;
 	object-fit: cover;
 	margin-bottom: 0.5rem;
-	max-height: 400px;
+	max-height: 350px;
 }
 
 .post.index .featured-image { height: 300px; }
