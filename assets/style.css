@@ -33,6 +33,12 @@ h1 { color: var(--title-color); }
 	margin: 0 auto;
 }
 
+.post-text {
+	padding: 0 5px;
+	max-width: 38rem;
+	margin: 0 auto;
+}
+
 @media only screen and (min-width: 1890px) {
 	#container {
 		max-width: 1000px;

@@ -1,10 +1,11 @@
 ---
 layout: default
 ---
-<div class="post page">
+<div class="post page" role="article">
 	{%- if page.image -%}
 		<img src="{{- page.image | relative_url -}}" alt="{{ page.title }}" aria-hidden="true" class="featured-image">
 	{%- endif %}
+	<div class="post-text">
 	<h1 class="title">{{ page.title }}</h1>
 	{% if page.description %}
 		<p class="description">{{ page.description }}</p>
@@ -19,6 +20,7 @@ layout: default
 	{% endfor %}
 		</div>
 	{%- endif %}
+	</div>
 </div>
 <hr>
 <div class="comments">
