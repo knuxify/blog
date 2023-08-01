@@ -9,7 +9,6 @@ layout: default
 		{%- if post.image -%}
 			<a href="{{ site.baseurl}}{{ post.url }}"><img src="{{- post.image | relative_url -}}" alt="{{ post.title }}" aria-hidden="true" class="featured-image" loading="lazy"></a>
 		{%- endif %}
-		<div class="post-text">
 		<h1 class="title"><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h3>
 		{% if post.description %}
 			<p class="description">{{ post.description }}</p>
@@ -17,7 +16,6 @@ layout: default
 		<p class="metadata">{{ post.date | date_to_string }} {% if post.last_modified_at %}<i>(updated {{post.last_modified_at | date_to_string}})</i> {% endif %}// {{ post.author }}</p>
 		{{ post.excerpt }}
 		<a class="read-more" href="{{ site.baseurl }}{{ post.url }}">Read more...</a>
-		</div>
 	</div>
 	<hr>
 {% endfor %}
