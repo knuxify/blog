@@ -18,8 +18,8 @@ body {
 	background-color: var(--main-bg);
 	color: var(--main-fg);
 	font-family: 'Noto Sans', sans-serif;
-	font-size: 17px;
-	line-height: 1.5;
+	font-size: 16px;
+	line-height: 1.6;
 }
 
 hr { color: var(--separator-color); }
@@ -29,14 +29,8 @@ h1 { color: var(--title-color); }
 
 #container {
 	padding: 1em 15px;
-	max-width: 820px;
+	max-width: calc(40rem + 30px);
 	margin: 0 auto;
-}
-
-@media only screen and (min-width: 1890px) {
-	#container {
-		max-width: 1000px;
-	}
 }
 
 /* Header */
@@ -91,8 +85,8 @@ a.pill-button {
 }
 
 .post {
-	line-height: 1.6;
-	margin: 20px 0;
+	line-height: 1.7;
+	margin: 0.75em 0;
 }
 
 .post .title { margin: 0; color: var(--title-color); }
