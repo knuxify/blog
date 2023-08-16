@@ -19,7 +19,7 @@ body {
 	color: var(--main-fg);
 	font-family: 'Noto Sans', sans-serif;
 	font-size: 16px;
-	line-height: 1.6;
+	line-height: 1.55;
 }
 
 hr { color: var(--separator-color); }
@@ -85,7 +85,6 @@ a.pill-button {
 }
 
 .post {
-	line-height: 1.7;
 	margin: 0.75em 0;
 }
 
