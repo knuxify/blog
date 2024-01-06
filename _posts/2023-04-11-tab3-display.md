@@ -11,7 +11,7 @@ tags:
   - mipi
   - display
 excerpt_separator: <!--more-->
-last_modified_at: 2023-04-22T00:00:00+00:00
+last_modified_at: 2024-01-06T00:00:00+00:00
 category: projects
 ---
 
@@ -536,7 +536,7 @@ You can find a list of DSI mode flags in [`include/drm/drm_mipi_dsi.h`](https://
 
 In my case, it looked fine without the last one, but it would desync after the screen was rotated. When you get your display working, make sure to test things like rotation!
 
-What I did was I first tried to copy the flags from similar panels in mainline - that's how I ended up with the mode flags that eventually worked. As for the bus flags - I just had to experiment. `DRM_BUS_FLAG_DE_HIGH` was the magic flag that made everything work, but your mileage may vary - every panel is different.
+What I did was I first tried to copy the flags from similar panels in mainline - that's how I ended up with the mode flags that eventually worked. As for the bus flags - I just had to experiment. ~~`DRM_BUS_FLAG_DE_HIGH` was the magic flag that made everything work~~, but your mileage may vary - every panel is different. (Edit as of January 2024 - in my case, it turns out that I was actually missing the `samsung,invert-vclk` property on the FIMD.)
 
 (Small aside on the topic: DRM mode flags are actually implemented by the DRM driver. In the case of the Exynos DRM DSI driver, I found out by grepping around in the source that the DRM flags are simply [written to the DSIM_CONFIG register](https://github.com/torvalds/linux/blob/v6.3-rc7/drivers/gpu/drm/exynos/exynos_drm_dsi.c#L800-L866) (offset `0x10`); from there, I was able to figure out that I could just extract the correct DRM flags for the panel by checking the DSIM dump (as mentioned in the DSI/FIMD section). Here's a small Python snippet that can extract these flags from the dumped config value:
 
@@ -562,6 +562,7 @@ I hope that this blog post will come in handy for anyone else who may at some po
 
 - 2023-04-15: Added some information to the backlight section.
 - 2023-04-22: Added more information about DSI mode flags.
+- 2024-01-06: Added note about `samsung,invert-vclk`.
 
 [^1]: While working on the mainline setup, I initially thought that it used a BP070WX1 panel, as mentioned [in the defconfig](https://github.com/gr8nole/android_kernel_samsung_smdk4x12/blob/baf2ac725ded606f3beea775acbb472a3643887c/arch/arm/configs/lineage_lt01wifi_defconfig#L2350); however, it looks like someone [accidentally swapped the panel config option while updating the defconfig](https://github.com/gr8nole/android_kernel_samsung_smdk4x12/commit/25a3e0dc730c39a7b71daedf6975c573a3702c30#diff-461bf7e8fa9baa4343af1294a4c774ab287a0a057d4b28d79775c11a3a83d6fdL2377-R2379), and the [Kconfig descriptions](https://github.com/gr8nole/android_kernel_samsung_smdk4x12/blob/baf2ac725ded606f3beea775acbb472a3643887c/drivers/video/samsung/Kconfig#L397-L405) confirm this.
 [^2]: The code snippet here is slightly different than the panel driver I ended up with; the snippet is adapted to [this commit](https://github.com/torvalds/linux/commit/996e1defca34485dd2bd70b173f069aab5f21a65) which wasn't yet in the kernel I was testing on (v6.2). 
